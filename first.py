@@ -56,6 +56,8 @@ def register():
         pass_word=request.form['p']
         mail=request.form['gm']
         mobile=request.form['pn']
+        f = request.files['img']
+          
     
         conn = sqlite3.connect('cse123.db')
         conn.cursor()
@@ -65,6 +67,8 @@ def register():
             return("incorrect email")
         elif check_mobile(mobile):
             return ('incorrect mobile number')
+        
+        f.save(f.filename)
         conn.execute("INSERT INTO students(username, email, enterpass,mobile) values(?,?,?,?)",(user_name,mail,pass_word,mobile))
         conn.commit()
         conn.close()
@@ -74,8 +78,8 @@ def register():
 
 @app.route('/dashboard',methods=['GET','POST'])
 def dashboard():
-  
-    return render_template('dashboard.html')
+    
+    return render_template('dashboard.html',name=session['user'])
        
 @app.route('/login', methods=["GET","POST"])
 def login():

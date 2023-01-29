@@ -27,11 +27,10 @@
           margin-left: 500px;
         "
       >
-      <center>
-      <form action="/register" method="POST">
-        
-          <h2 id="f">Register</h2>
-          
+        <center>
+          <form action="/register" method="POST" enctype="multipart/form-data">
+            <h2 id="f">Register</h2>
+
             <input
               type="text"
               name="n"
@@ -40,10 +39,9 @@
               placeholder="enter your name"
               style="background-color: lightgray"
               required
-              
             />
-           
-            <br /><br /><br />
+
+            <br /><br />
             <input
               type="password"
               name="p"
@@ -52,35 +50,41 @@
               placeholder="enter your password here"
               style="background-color: lightgray"
               required
-              minlength='6'
+              minlength="6"
             />
-           
-            <br /><br /><br />
+
+            <br /><br />
             <input
               type="email"
               name="gm"
               placeholder="xxxxxxxxxxxx@gmail.com"
               required
             />
-           
-           
-           
-            <br /><br /><br />
-            
-        
-            <input type='number' name='pn' placeholder='+91xxxxxxxxxxxx' required/>
-           
-              
-           
-            <br /><br />
-            
-       
-      
-        <button id="b" name="Reg">Register</button>
 
-      </form>
-    </center>
-    
+            <br /><br />
+
+            <input
+              type="number"
+              name="pn"
+              placeholder="+91xxxxxxxxxxxx"
+              required
+            />
+
+            <br /><br />
+
+            <input
+              type="file"
+              name="img"
+              size='10px'
+              style="border-radius: 20px ;width: 250px; height:21px"
+              required
+            />
+
+            <br /><br />
+
+            <button id="b" name="Reg">Register</button>
+          </form>
+        </center>
       </div>
     </div>
   </body>
