@@ -1,0 +1,33 @@
+<html>
+    <head>
+        <title>
+            Login
+        </title>
+        <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}">
+    </head>
+    <body>
+        <nav style="margin-left:450px">
+            <ul>
+                <li><a href="{{url_for('home')}}">HOME</a>
+                <li><a href="{{url_for('register')}}">REGISTER</a></li>
+            </ul>
+        </nav>
+        <div id="li" style="background-image:url({{url_for('static',filename='login.jpeg')}}); height:100%;width:100% ;background-repeat:no-repeat;background-size:cover; ">
+            <br><br>
+            <div style="background:lightslategrey;opacity:0.7;width:500px;height:500px;border-radius:30px;border-style:groove;border-color: silver 10px;margin-top:100px;margin-left: 500px;">
+                <br><br>   
+                <center><h2 id="f">Login Page</h2>
+                    <br><br>
+                    <form action='/login' method='POST'>
+                <input type="text" name="n" size="10px" maxlength="30px" placeholder="enter your name" style="background-color:lightgray" required />
+                
+                <br><br><br>
+                <input type="password" name="p" size="10px" maxlength="20px" placeholder="enter your password here" style="background-color:lightgray" required minlength=6/>
+                <br><br><br>
+                <input id="s" type="submit">
+                    </form>
+            </center>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,87 @@
+<html>
+  <head>
+    <title>Registration</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='style.css')}}" />
+  </head>
+  <body>
+    <nav style="margin-left: 450px">
+      <ul>
+        <li><a href="{{url_for('home')}}">HOME</a></li>
+        <li><a href="{{url_for('login')}}">LOGIN</a></li>
+      </ul>
+    </nav>
+    <div
+      id="rr"
+      style="background-image:url({{url_for('static',filename='2.jpg')}});height:100%;width:100%;background-repeat:no-repeat;background-size:cover;"
+    >
+      <br /><br /><br /><br /><br /><br /><br />
+      <div
+        style="
+          background-color: lightslategray;
+          opacity: 0.8;
+          border-style: groove;
+          border-color: silver 10px;
+          width: 500px;
+          height: 500px;
+          border-radius: 30px;
+          margin-left: 500px;
+        "
+      >
+      <center>
+      <form action="/register" method="POST">
+        
+          <h2 id="f">Register</h2>
+          
+            <input
+              type="text"
+              name="n"
+              size="10px"
+              maxlength="30px"
+              placeholder="enter your name"
+              style="background-color: lightgray"
+              required
+              
+            />
+           
+            <br /><br /><br />
+            <input
+              type="password"
+              name="p"
+              size="10px"
+              maxlength="20px"
+              placeholder="enter your password here"
+              style="background-color: lightgray"
+              required
+              minlength='6'
+            />
+           
+            <br /><br /><br />
+            <input
+              type="email"
+              name="gm"
+              placeholder="xxxxxxxxxxxx@gmail.com"
+              required
+            />
+           
+           
+           
+            <br /><br /><br />
+            
+        
+            <input type='number' name='pn' placeholder='+91xxxxxxxxxxxx' required/>
+           
+              
+           
+            <br /><br />
+            
+       
+      
+        <button id="b" name="Reg">Register</button>
+
+      </form>
+    </center>
+    
+      </div>
+    </div>
+  </body>
+</html>
