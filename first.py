@@ -1,7 +1,56 @@
+from json import encoder
 from flask import Flask,render_template,request,redirect,url_for,session,flash
 import sqlite3
 from email_validator import validate_email,EmailNotValidError
 
+
+
+import csv
+import os
+import numpy as np
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+import keras
+import tensorflow as tf
+import flask
+from flask import Flask, render_template, request
+from keras.models import load_model
+import librosa
+import pickle
+
+import librosa
+import librosa.display as lplt
+
+
+# import matplotlib to be able to display graphs
+import matplotlib.pyplot as plt
+
+# transform .wav into .csv
+import csv
+import os
+import numpy as np
+import pandas as pd
+
+# preprocessing
+from sklearn.preprocessing import LabelEncoder
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+
+# model
+import keras
+import tensorflow as tf
+
+#import seaborn as sns
+import matplotlib.pyplot as plt
+from sklearn.metrics import confusion_matrix
+from joblib import load
+
+
+scaler = load('scaler.joblib')
+model = load('model.joblib')
+encoder= load('encoder.joblib')
+    
 def check_username(user_name):
     con = sqlite3.connect('cse123.db')
     cur=con.cursor()
@@ -16,6 +65,7 @@ def check_user(user_name,password):
     cur=conn.cursor()
     cur.execute("select username,enterpass  from students where username=? and enterpass=?",(user_name,password))
     data=cur.fetchall()
+    
          
     if len(data)!=0:
         return True
@@ -41,7 +91,13 @@ def check_mobile(mobile):
         return True
     else:
         return False
-       
+
+
+    
+    
+    
+    
+    
 app = Flask(__name__)
 app.secret_key='hello'
 
@@ -56,7 +112,7 @@ def register():
         pass_word=request.form['p']
         mail=request.form['gm']
         mobile=request.form['pn']
-        f = request.files['img']
+       
           
     
         conn = sqlite3.connect('cse123.db')
@@ -68,7 +124,7 @@ def register():
         elif check_mobile(mobile):
             return ('incorrect mobile number')
         
-        f.save(f.filename)
+        
         conn.execute("INSERT INTO students(username, email, enterpass,mobile) values(?,?,?,?)",(user_name,mail,pass_word,mobile))
         conn.commit()
         conn.close()
@@ -76,11 +132,69 @@ def register():
     
     return render_template('nreg.html')
 
-@app.route('/dashboard',methods=['GET','POST'])
-def dashboard():
+
+
+@app.route('/predict',methods=["GET","POST"])
+def predict():
     
-    return render_template('dashboard.html',name=session['user'])
+    if request.method=='POST':   
+        f = request.files['sound']
+    # Retrieve user input data
+        header_test = "filename length chroma_stft_mean chroma_stft_var rms_mean rms_var spectral_centroid_mean spectral_centroid_var spectral_bandwidth_mean \
+            spectral_bandwidth_var rolloff_mean rolloff_var zero_crossing_rate_mean zero_crossing_rate_var harmony_mean harmony_var perceptr_mean perceptr_var tempo mfcc1_mean mfcc1_var mfcc2_mean \
+            mfcc2_var mfcc3_mean mfcc3_var mfcc4_mean mfcc4_var".split()
+            
+        file = open('data_test.csv', 'w', newline = '')
+        with file:
+            writer = csv.writer(file)
+            writer.writerow(header_test)
+            
+            
+        #scaler = StandardScaler()
+        
+        #encoder = OneHotEncoder(categories='auto')
        
+        sound_name = f
+        y, sr = librosa.load(sound_name, mono = True, duration = 30)
+        chroma_stft = librosa.feature.chroma_stft(y = y, sr = sr)
+        rmse = librosa.feature.rms(y = y)
+        spec_cent = librosa.feature.spectral_centroid(y = y, sr = sr)
+        spec_bw = librosa.feature.spectral_bandwidth(y = y, sr = sr)
+        rolloff = librosa.feature.spectral_rolloff(y = y, sr = sr)
+        zcr = librosa.feature.zero_crossing_rate(y)
+        mfcc = librosa.feature.mfcc(y = y, sr = sr)
+        to_append = f'{f.filename} {np.mean(chroma_stft)} {np.mean(rmse)} {np.mean(spec_cent)} {np.mean(spec_bw)} {np.mean(rolloff)} {np.mean(zcr)}'
+
+        for e in mfcc:
+            to_append += f' {np.mean(e)}'
+
+        file = open('data_test.csv', 'a', newline = '')
+
+        with file:
+            writer = csv.writer(file)
+            writer.writerow(to_append.split())
+                
+        df_test = pd.read_csv('data_test.csv')
+        print(df_test)
+        #scaler.fit(df_test.iloc[:, 1:27])
+        X_test = scaler.transform(np.array(df_test.iloc[:, 1:27]))
+
+        print("X_test:", X_test)
+        
+        # Make prediction with the trained model
+        prediction = model.predict(X_test)
+        print(prediction)
+        classes = np.argmax(prediction, axis = 1)
+        print(classes)
+       
+        #encoder.fit(classes.reshape(-1,1))
+        result = encoder.inverse_transform(classes.reshape(-1,1))
+        
+        print(result)
+
+    return render_template('predict.html',result=result)
+
+
 @app.route('/login', methods=["GET","POST"])
 def login():
     
@@ -103,7 +217,8 @@ def login():
 def user():
     if 'user' in session:
         user=session['user']
-        return redirect(url_for('dashboard'))
+        print(user)
+        return redirect(url_for('predict'))
     else:
         return redirect(url_for('login'))    
 @app.route('/logout', methods=['GET','POST'])

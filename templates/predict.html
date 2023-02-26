@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+    <title>Species Audio Recognition</title>
+    <style>
+      body {
+        background-image: url('/static/predict.jpg');
+        background-size: cover;
+        font-family: Arial, sans-serif;
+        color: white;
+      }
+      #upload-form {
+        width: 500px;
+        margin: 0 auto;
+        text-align: center;
+        border: 2px solid white;
+        border-radius: 20px;
+        padding: 20px;
+        background-color: rgba(0, 0, 0, 0.7);
+      }
+      h1 {
+        margin-top: 50px;
+        font-size: 36px;
+      }
+      h3 {
+        margin-top: 30px;
+        font-size: 24px;
+      }
+      input[type="file"] {
+        margin-top: 20px;
+        width: 250px;
+        height: 21px;
+        border-radius: 20px;
+        background-color: white;
+        color: black;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px;
+        border: none;
+      }
+      input[type="submit"] {
+        margin-top: 20px;
+        background-color: #4CAF50;
+        color: white;
+        border-radius: 20px;
+        border: none;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        padding: 5px 20px;
+      }
+      input[type="submit"]:hover {
+        background-color: #3e8e41;
+      }
+      a {
+        color: white;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="upload-form">
+      <h1>Upload the audio file of any species to know the information</h1>
+      <form action="/predict" method="POST" enctype="multipart/form-data">
+        <input type="file" name="sound" required />
+        <br>
+        <input type="submit" value="Submit">
+<br>  <br>
+        <p>The identified species is: {{ result }}</p>
+     
+      </form>
+      <br>
+      <h3><a href="{{url_for('logout')}}">Logout</a></h3>
+    </div>
+  </body>
+</html>
