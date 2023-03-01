@@ -254,6 +254,8 @@ def results():
 # Loop through each heading and its section text, and add it to the sections list
     for heading in headings:
         section_heading = heading.text.strip()
+        
+        section_heading=section_heading.replace("[edit]", "").replace("[0]","")
         section_text = ''
 
         # Find the section's text by looking at all the elements until the next heading
@@ -262,9 +264,10 @@ def results():
             if next_node.name == 'p':
                 section_text += '\n' + next_node.text.strip()
             next_node = next_node.next_sibling
-
+        if section_text:
+        
         # Add the section to the list
-        sections.append({'heading': section_heading, 'text': section_text})
+            sections.append({'heading': section_heading, 'text': section_text})
         # Close the browser window
     driver.quit()
     print(sections)

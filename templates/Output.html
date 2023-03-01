@@ -8,7 +8,7 @@
     <div class="content">
         <div id="image-container"> <img src="{{url_for('static',filename='images/' +whale+ '.jpg')}}" alt="{{whale}}"></div>
 
-        <div id="text-container" ><h3>INTRODUCTION</h3>{{introduction}}
+        <div id="text-container" ><h3><p>  INTRODUCTION</p></h3>{{introduction}}
             {% for section in sections %}
             <div class="section-text">
               <h2>{{ section.heading }}</h2>
