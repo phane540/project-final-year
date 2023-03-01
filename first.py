@@ -1,3 +1,4 @@
+import io
 from json import encoder
 from flask import Flask,render_template,request,redirect,url_for,session,flash
 import sqlite3
@@ -47,10 +48,26 @@ from sklearn.metrics import confusion_matrix
 from joblib import load
 
 
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from bs4 import BeautifulSoup
+import re
+import wikipedia
+import matplotlib.pyplot as plt
+from scipy.io import wavfile
+import matplotlib.pyplot as plt
+import numpy as np
+import base64
+from matplotlib.pyplot import axes
+import urllib.parse
+import requests
+
 scaler = load('scaler.joblib')
 model = load('model.joblib')
 encoder= load('encoder.joblib')
-    
+
+
+
 def check_username(user_name):
     con = sqlite3.connect('cse123.db')
     cur=con.cursor()
@@ -93,10 +110,10 @@ def check_mobile(mobile):
         return False
 
 
-    
-    
-    
-    
+
+
+
+
     
 app = Flask(__name__)
 app.secret_key='hello'
@@ -134,26 +151,29 @@ def register():
 
 
 
-@app.route('/predict',methods=["GET","POST"])
+@app.route('/predict',methods=['GET',"POST"])
 def predict():
-    
+    global r
+    r=None
     if request.method=='POST':   
         f = request.files['sound']
-    # Retrieve user input data
+                # Load audio file
+       
+        # Retrieve user input data
         header_test = "filename length chroma_stft_mean chroma_stft_var rms_mean rms_var spectral_centroid_mean spectral_centroid_var spectral_bandwidth_mean \
-            spectral_bandwidth_var rolloff_mean rolloff_var zero_crossing_rate_mean zero_crossing_rate_var harmony_mean harmony_var perceptr_mean perceptr_var tempo mfcc1_mean mfcc1_var mfcc2_mean \
-            mfcc2_var mfcc3_mean mfcc3_var mfcc4_mean mfcc4_var".split()
-            
+                spectral_bandwidth_var rolloff_mean rolloff_var zero_crossing_rate_mean zero_crossing_rate_var harmony_mean harmony_var perceptr_mean perceptr_var tempo mfcc1_mean mfcc1_var mfcc2_mean \
+                mfcc2_var mfcc3_mean mfcc3_var mfcc4_mean mfcc4_var".split()
+                
         file = open('data_test.csv', 'w', newline = '')
         with file:
             writer = csv.writer(file)
             writer.writerow(header_test)
+                
+                
+            #scaler = StandardScaler()
             
-            
-        #scaler = StandardScaler()
+            #encoder = OneHotEncoder(categories='auto')
         
-        #encoder = OneHotEncoder(categories='auto')
-       
         sound_name = f
         y, sr = librosa.load(sound_name, mono = True, duration = 30)
         chroma_stft = librosa.feature.chroma_stft(y = y, sr = sr)
@@ -175,6 +195,9 @@ def predict():
             writer.writerow(to_append.split())
                 
         df_test = pd.read_csv('data_test.csv')
+        
+        
+        
         print(df_test)
         #scaler.fit(df_test.iloc[:, 1:27])
         X_test = scaler.transform(np.array(df_test.iloc[:, 1:27]))
@@ -186,13 +209,72 @@ def predict():
         print(prediction)
         classes = np.argmax(prediction, axis = 1)
         print(classes)
-       
-        #encoder.fit(classes.reshape(-1,1))
-        result = encoder.inverse_transform(classes.reshape(-1,1))
         
+        #encoder.fit(classes.reshape(-1,1))
+        result = encoder.inverse_transform(classes.reshape(-1,))
         print(result)
+        
+    
+        r=str(result[0])
 
-    return render_template('predict.html',result=result)
+    return render_template('predict.html',r=r)
+
+
+
+@app.route('/results',methods=['POST','GET'])
+def results():
+    whale=r
+    wikipedia.set_lang("en")
+
+    # Get the page object for the Wikipedia article
+    page = wikipedia.page(whale)
+
+    # Get the introduction part of the article
+    introduction = page.summary
+        # Create a new Chrome browser window in headless mode
+    options = webdriver.ChromeOptions()
+    options.add_argument('--headless')
+    options.add_argument('--disable-gpu')
+    driver = webdriver.Chrome('C:/Users/phane/project final year/chromedriver_win32/chromedriver', options=options)
+
+    # Navigate to the Wikipedia page for Humpback Whale
+
+    driver.get(f"https://en.wikipedia.org/wiki/{whale}")
+
+    # Get the page source and create a BeautifulSoup object
+    page_source = driver.page_source
+    soup = BeautifulSoup(page_source, 'html.parser')
+
+    # Find all the headings on the page
+    headings = soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])
+
+    # Initialize the page content variable as a list of sections
+    sections = []
+
+# Loop through each heading and its section text, and add it to the sections list
+    for heading in headings:
+        section_heading = heading.text.strip()
+        section_text = ''
+
+        # Find the section's text by looking at all the elements until the next heading
+        next_node = heading.next_sibling
+        while next_node and next_node.name not in ['h1', 'h2', 'h3', 'h4', 'h5', 'h6']:
+            if next_node.name == 'p':
+                section_text += '\n' + next_node.text.strip()
+            next_node = next_node.next_sibling
+
+        # Add the section to the list
+        sections.append({'heading': section_heading, 'text': section_text})
+        # Close the browser window
+    driver.quit()
+    print(sections)
+
+    
+    return render_template('Output.html',introduction=introduction,sections=sections,whale=whale)
+
+
+
+
 
 
 @app.route('/login', methods=["GET","POST"])

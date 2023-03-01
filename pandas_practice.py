@@ -25,7 +25,8 @@ df.head()
     
 class_list = df.iloc[:,-1]
 encoder = LabelEncoder()
-y = encoder.fit_transform(class_list)
+y= encoder.fit_transform(class_list)
+
 
 print("y: ", y)
     
