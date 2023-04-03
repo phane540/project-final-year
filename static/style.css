@@ -1,17 +1,16 @@
-#abtcont{
-    background-color: lightslategrey;
-    opacity:0.8;
-}
+
+
 #abt{
     background-image: url("home.jpeg");
     background-repeat: no-repeat;
-    height: 100%;
+    height: 106%;
     
-    max-width:99%;
+    max-width:100%;
     background-size:cover;
+    background-position: center center;
 }
 #tm{
-    background-image:url("1.jpg");
+    background-image:url("home.jpeg");
 
     background-repeat: no-repeat;
     height:102%;
@@ -24,10 +23,11 @@
    
     background-repeat: no-repeat;
     height:103%;
-
+    
    
     background-image: url("4.jpg");
     background-size: cover;
+    background-position: center center;
 }
 #intro1{ 
     
@@ -46,6 +46,10 @@ input{
     font-family: fantasy;
     font-size: medium;
     background-color:lightskyblue;
+    color: black;
+    width: 300px;
+    border-radius: 50px;
+    height: 50px;
 }
 #b:hover{
     transform:scale(1.2);
@@ -53,7 +57,14 @@ input{
 }
 #f{
     font-family:fantasy;
-    text-shadow:2px 5px grey;
+    text-shadow:8px 8px black;
+    color:whitesmoke;
+    font-size:xx-large;
+}
+#f1{
+    font-family:'Franklin Gothic Medium';
+   
+    
     font-size:xx-large;
 }
 #s{
@@ -65,12 +76,29 @@ input{
     background-color:lightgreen;
     transform:scale(1.2);
 }
+.image-card {
+    border-radius: 0px;
+    box-shadow: 0 10px 10px rgba(0, 0, 0, 0.7);
+    margin-bottom: 7px;
+    text-align: center;
+    width: calc(100% - 10px);
+  }
+  .image-card img:hover {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    border-radius: 3px;
+    height: 200px;
+    transform: scale(1.2);
+    transition: transform 0.3s ease-in-out;
+   
+  }
 #dt{
     font-style: italic;
     font-family: sans-serif;
 }
 body{
-    background-color:lightslategray;
+    background-color:whitesmoke;
 }
 #ddn{
     position:fixed;

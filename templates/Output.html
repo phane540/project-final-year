@@ -1,13 +1,19 @@
 <!DOCTYPE html>
 <head>
     <title>Marine Mammals Bio Acoustics </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{url_for('static',filename='opss.css')}}">
 </head>
-<body>
+<body  class='background-image'>
     <header ><h1>{{whale}}</h1></header>
-    <div class="content">
-        <div id="image-container"> <img src="{{url_for('static',filename='images/' +whale+ '.jpg')}}" alt="{{whale}}"></div>
-
+    <div class="content" class='content-container'>
+        <div id="image-container" class='left-container'> 
+            <div class="image-card">
+            <img src="{{url_for('static',filename='images/' +whale+ '.jpg')}}" alt="{{whale}}"   class="img-left">
+            <h3>{{whale}}</h3>
+            </div>
+        </div>
+        
         <div id="text-container" ><h3><p>  INTRODUCTION</p></h3>{{introduction}}
             {% for section in sections %}
             <div class="section-text">
@@ -15,11 +21,19 @@
                 <p>{{ section.text }}</p>
               </div>
             {% endfor %}</div>
-            <div class="sidebar">
-                <h3>Specifications</h3>
-            <img src="{{ url_for('static', filename='spec.png') }}">
+            <div class="sidebar"  class='right-container'>
+                <h3>RANGE MAP OF SPECIES</h3>
+               
+               
+            <img src="{{ url_for('static', filename='rangemaps/' +whale+ '.png') }}" class="img-right">
+            
+              
+          <div> <h3><a href="{{url_for('logout')}}" style="float:right;margin-right:20px">Logout</a></h3> </div>
         </div>
+        
+       
     </div>
-    <footer >    <p>&copy; 2023 Marine Mammals Bio Acoustics. All rights reserved.</p></footer>
 </body>
+<br>
+<footer ><p>&copy; 2023 Marine Mammals Bio Acoustics. All rights reserved.</p></footer>
 </html>
