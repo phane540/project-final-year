@@ -1,4 +1,3 @@
-import io
 from json import encoder
 from flask import Flask,render_template,request,redirect,url_for,session,flash
 import sqlite3
@@ -8,13 +7,10 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-import keras
 import tensorflow as tf
-import flask
 from flask import Flask, render_template, request
 from keras.models import load_model
 import librosa
-import pickle
 import seaborn as sns
 import librosa
 import librosa.display as lplt
@@ -24,7 +20,6 @@ import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
-import keras
 import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix
@@ -33,7 +28,6 @@ import os
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
-import wikipedia
 import matplotlib.pyplot as plt
 import matplotlib.pyplot as plt
 import numpy as np
